@@ -22,13 +22,21 @@ async function run() {
         await client.connect();
         const database = client.db("portfolio-parvez-aman");
         const test = database.collection("test");
-        // create a document to insert
-        const doc = {
-            title: "Record of a Shriveled Datum",
-            content: "No bytes, no problem. Just insert a document, in MongoDB",
-        }
-        const result = await test.insertOne(doc);
-        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        const myProjects = database.collection("my-projects");
+
+        app.get('/myprojects', async (req, res) => {
+            const cursor = myProjects.find({});
+            const projects = await cursor.toArray();
+            res.send(projects);
+        });
+        app.get('/myprojects/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const project = await myProjects.findOne(query);
+            res.json(project);
+        })
+        // const result = await test.insertOne(doc);
+        // console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } finally {
         // await client.close();
     }
@@ -38,8 +46,8 @@ run().catch(console.dir);
 
 app.get('/', (req, res) => {
     res.send('Hello World! portfolio Parvez Aman server Running!!!');
-  });
-  
-  app.listen(port, () => {
+});
+
+app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
-  });
+});
