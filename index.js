@@ -24,17 +24,23 @@ async function run() {
         const test = database.collection("test");
         const myProjects = database.collection("my-projects");
 
+        // my projects related codes start  my projects related codes start     my projects related codes start
+
         app.get('/myprojects', async (req, res) => {
             const cursor = myProjects.find({});
             const projects = await cursor.toArray();
             res.send(projects);
         });
+        // Get specific project
         app.get('/myprojects/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const project = await myProjects.findOne(query);
             res.json(project);
-        })
+        });
+        // my projects related codes end    my projects related codes end   my projects related codes end
+
+        
         // const result = await test.insertOne(doc);
         // console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } finally {
